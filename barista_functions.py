@@ -2,6 +2,10 @@
 import time
 import milk_prepare
 import shots_prepare
+import random
+
+drinks=["latte","cappucino","flatwhite","mocha","hotchocolate"]
+group_heads_in_use=0
 
 def make_drink(drink_type):
     if drink_type == "latte":
@@ -32,5 +36,16 @@ def make_drink(drink_type):
         time.sleep(1)
         t -= 1
     print(f"{drink_type} served to the customer")
+    group_heads_in_use=group_heads_in_use-1
 
 make_drink("latte")
+
+if group_heads_in_use==3:
+    print("Please wait till one group handle is free.")
+
+
+random_drink=drinks[random.randrange(0,4)]
+print(random_drink)
+
+for i in range(0,10):
+    print(i)
