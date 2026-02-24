@@ -3,10 +3,10 @@ import random
 import time
 import utils
 
-# Requirements from README: 3 orders max at a time
+# group handles = 3 orders per time
 machine_capacity = threading.Semaphore(3)
 
-# Drinks and their specific timings from your original files
+#Menu of drinks
 MENU = {
     "latte": {"milk": 20, "shots": 20, "num_shots": 2},
     "flatwhite": {"milk": 45, "shots": 30, "num_shots": 3},
@@ -21,21 +21,21 @@ def make_drink(order_id, drink_type):
     with machine_capacity:
         print(f"\n[BARISTA] Starting Order #{order_id}: {drink_type}")
         
-        # Requirement from README: Barista prep time (5-10s)
+        #Getting ready time
         prep_time = random.randint(5, 10)
-        utils.countdown(prep_time, f"Order #{order_id} Prep")
+        utils.countdown(prep_time, f"Order #{order_id} starting to prepare")
 
         recipe = MENU[drink_type]
 
-        # Process Milk
+        #Milk prepare
         if recipe["milk"] > 0:
             utils.countdown(recipe["milk"], f"Order #{order_id} Milk")
         
-        # Process Shots
+        #Shots preparing
         if recipe["shots"] > 0:
             utils.countdown(recipe["shots"], f"Order #{order_id} Shots")
 
-        print(f"\n☕ Order #{order_id} ({drink_type}) is served to the customer!")
+        print(f"\nOrder #{order_id} ({drink_type}) is served to the customer!")
 
 def start_coffee_shop():
     """Main loop that randomly generates orders."""
@@ -44,22 +44,22 @@ def start_coffee_shop():
     
     try:
         while True:
-            # Randomly pick a drink from your list
+            #Pick a random drink and pass it to barista
             drink_choice = random.choice(list(MENU.keys()))
             
-            # Start the order in a new thread
+            #Order in a new thread
             t = threading.Thread(target=make_drink, args=(order_counter, drink_choice))
-            t.daemon = True # Allows the program to close when you stop it
+            t.daemon = True #When user stop it System stops
             t.start()
             
             order_counter += 1
             
-            # Wait a random amount of time before the next customer arrives (3-15 seconds)
+            #Random time to next customer
             wait_for_customer = random.randint(3, 15)
             time.sleep(wait_for_customer)
             
     except KeyboardInterrupt:
-        print("\n--- Shop is closing. Cleaning the machine! ---")
+        print("\n--- Coffee Machine is Closing. Cleaning the machine! ---")
 
 if __name__ == "__main__":
     start_coffee_shop()
